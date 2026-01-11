@@ -1,0 +1,418 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import cold tech typography */
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Permanent+Marker&display=swap');
+
+:root {
+  --font-display: 'Oxanium', sans-serif;
+  --font-body: 'Manrope', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-graffiti: 'Permanent Marker', cursive;
+  
+  /* Color tokens - Soft Lavender (easier on eyes) */
+  --canvas-50: #FAFAFA;
+  --canvas-100: #F5F3F7;
+  --canvas-200: #EDEAEF;
+  --canvas-300: #DDD8E4;
+  --ink: #2D2838;
+  --ink-muted: #6B6478;
+  --void-text: #EDEAF5;
+  --void-surface: #15102A;
+  --void-border: #1F1836;
+  --void-base: #07040C;
+  --neon-violet: #6E3AFF;
+  --neon-violet-dim: #7C4DFF;
+  --shadow-purple: #5E4A8A;
+  --shadow-purple-light: #7B6B9E;
+  --danger: #A51D4E;
+  --danger-dark: #7A1539;
+}
+
+/* ============================================================================
+   BASE LAYER
+   ============================================================================ */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ☀️ Light Mode - Ash Violet */
+body {
+  background-color: var(--canvas-100);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-feature-settings: 'ss01' on, 'cv01' on;
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🌑 Dark Mode - Void Violet */
+.dark body {
+  color: var(--void-text);
+  background-color: var(--void-base);
+}
+
+/* Global theme transition */
+*, *::before, *::after {
+  transition: background-color 0.4s ease, 
+              border-color 0.4s ease, 
+              box-shadow 0.4s ease,
+              color 0.3s ease;
+}
+
+button, a, input, textarea {
+  transition: background-color 0.2s ease, 
+              border-color 0.2s ease, 
+              box-shadow 0.2s ease,
+              color 0.2s ease,
+              transform 0.2s ease,
+              opacity 0.2s ease;
+}
+
+/* Subtle fog overlay - light mode (softer) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at top left, rgba(124, 77, 255, 0.015) 0%, transparent 50%),
+              radial-gradient(ellipse at bottom right, rgba(94, 74, 138, 0.01) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Void purple fog - dark mode */
+.dark body::before {
+  background: radial-gradient(ellipse at top left, rgba(110, 58, 255, 0.06) 0%, transparent 40%),
+              radial-gradient(ellipse at bottom right, rgba(59, 29, 122, 0.05) 0%, transparent 40%);
+}
+
+/* Very faint noise texture - dark mode only */
+.dark body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+::selection {
+  background-color: rgba(110, 58, 255, 0.25);
+  color: inherit;
+}
+
+.dark ::selection {
+  background-color: rgba(110, 58, 255, 0.35);
+}
+
+/* Custom scrollbar - void violet */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--canvas-200);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background-color: #0E0918;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #5B2ECC 0%, #3B1D7A 100%);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6E3AFF 0%, #3B1D7A 100%);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  box-shadow: 0 0 8px rgba(110, 58, 255, 0.3);
+}
+
+/* ============================================================================
+   COMPONENT CLASSES
+   ============================================================================ */
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.section-container {
+  max-width: 72rem; /* 6xl = 72rem */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .section-container {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-container {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+.section-spacing {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+@media (min-width: 768px) {
+  .section-spacing {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-spacing {
+    padding-top: 10rem;
+    padding-bottom: 10rem;
+  }
+}
+
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  transform-origin: left;
+  background: linear-gradient(90deg, #6E3AFF, #3B1D7A);
+  transform: scaleX(0);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.link-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* Subtle violet glow - only on focus/active */
+.glow-focus:focus,
+.glow-focus:active {
+  box-shadow: 0 0 12px rgba(110, 58, 255, 0.35);
+}
+
+/* Signal line decoration */
+.signal-line {
+  position: relative;
+}
+
+.signal-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(110, 58, 255, 0.3) 50%, transparent 100%);
+}
+
+/* Terminal-style microcopy */
+.terminal-text {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* Void card style */
+.void-card {
+  background-color: var(--canvas-50);
+  border: 1px solid var(--canvas-300);
+}
+
+.dark .void-card {
+  background-color: var(--void-surface);
+  border-color: var(--void-border);
+}
+
+.void-card:hover {
+  box-shadow: 0 0 12px rgba(110, 58, 255, 0.15);
+}
+
+.dark .void-card:hover {
+  border-color: rgba(110, 58, 255, 0.3);
+}
+
+/* Focus states */
+.focus-ring:focus {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--canvas-100), 0 0 0 4px rgba(110, 58, 255, 0.5);
+}
+
+.dark .focus-ring:focus-visible {
+  box-shadow: 0 0 0 2px var(--void-base), 0 0 0 4px rgba(110, 58, 255, 0.5);
+}
+
+/* Primary button - deep violet */
+.btn-primary {
+  background-color: var(--neon-violet-dim);
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.125rem;
+  transition: all 0.2s ease;
+}
+
+.dark .btn-primary {
+  background-color: var(--neon-violet);
+}
+
+.btn-primary:hover {
+  background-color: var(--neon-violet);
+  box-shadow: 0 0 12px rgba(110, 58, 255, 0.35);
+}
+
+.dark .btn-primary:hover {
+  background-color: rgba(110, 58, 255, 0.9);
+}
+
+/* Secondary button - transparent with border */
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--shadow-purple-light);
+  color: var(--shadow-purple);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.125rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.dark .btn-secondary {
+  border-color: rgba(110, 58, 255, 0.4);
+  color: var(--void-text);
+}
+
+.btn-secondary:hover {
+  border-color: var(--neon-violet-dim);
+  background-color: rgba(110, 58, 255, 0.15);
+}
+
+.dark .btn-secondary:hover {
+  border-color: rgba(110, 58, 255, 0.6);
+}
+
+/* Danger button - no glow, serious */
+.btn-danger {
+  background-color: var(--danger);
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.125rem;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-danger:hover {
+  background-color: var(--danger-dark);
+}
+
+/* Status indicator */
+.status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  animation: signal 2s ease-in-out infinite;
+}
+
+.status-dot.active {
+  background-color: #34d399; /* emerald-400 */
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+}
+
+.status-dot.warning {
+  background-color: var(--danger);
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+/* Animation delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+
+/* Stagger children animation */
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 400ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 500ms; }
+
+/* Text gradient - subtle violet */
+.text-gradient-void {
+  background: linear-gradient(to right, var(--neon-violet), var(--shadow-purple), var(--neon-violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Dark mode text utilities */
+.dark .text-void-primary {
+  color: #EDEAF5;
+}
+
+.dark .text-void-muted {
+  color: #8A84A6;
+}
+
+/* ============================================================================
+   KEYFRAMES
+   ============================================================================ */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes signal {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
