@@ -287,7 +287,7 @@ function MobileMenu({
       {isOpen && (
         <motion.div
           {...MOTION.mobileMenu}
-          className="fixed inset-0 z-40 bg-canvas-100/95 dark:bg-void-base/98 backdrop-blur-lg md:hidden"
+          className="fixed inset-0 z-40 bg-canvas-100 dark:bg-void-base backdrop-blur-sm md:hidden"
         >
           <div className="flex flex-col items-center justify-center h-full gap-8">
             {NAV_ITEMS.map((item, index) => (
