@@ -224,9 +224,9 @@ export default function IntroScreen() {
             </AnimatePresence>
           </div>
 
-          {/* Skip button */}
+          {/* Skip button - only show during boot and identity phases */}
           <AnimatePresence>
-            {phase !== 'exit' && phase !== 'complete' && (
+            {(phase === 'boot' || phase === 'identity') && (
               <SkipButton onClick={handleSkip} />
             )}
           </AnimatePresence>
