@@ -312,7 +312,7 @@ function MobileMenu({
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ delay: 0.4, duration: 0.3 }}
                 onClick={toggleTheme}
-                className="flex items-center gap-3 font-body text-body-md text-ink-muted hover:text-ink transition-colors focus-ring rounded-sm"
+                className="flex items-center gap-3 font-body text-body-md text-ink-muted dark:text-void-muted hover:text-ink dark:hover:text-void-text transition-colors focus-ring rounded-sm"
               >
                 {theme === 'light' ? (
                   <>{Icons.moonLarge} Dark Mode</>
