@@ -30,7 +30,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🔗 Live Site
 
-**[timzhuang.dev](https://timzhuang.dev)** *(or your Vercel URL)*
+**[timzhuang.dev](https://timzhuang.com)**
 
 ## ✨ Features
 
