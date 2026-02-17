@@ -11,6 +11,7 @@ import { useTheme } from './ThemeProvider'
 /** Navigation links */
 const NAV_ITEMS = [
   { label: 'Projects', href: '#projects' },
+  { label: 'Photos', href: '#photos' },
   { label: 'About', href: '#about' },
   { label: 'Resume', href: '#resume' },
   { label: 'Contact', href: '#contact' },
