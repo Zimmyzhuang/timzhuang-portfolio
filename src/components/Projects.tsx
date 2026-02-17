@@ -33,15 +33,17 @@ const MAX_VISIBLE_TECH = 4
 /** Project data - Coming Soon placeholders */
 const PROJECTS: Project[] = [
   {
-    id: 'project-1',
-    title: 'Coming Soon',
-    tagline: 'An exciting project is in the works.',
-    description: 'Details about this project will be revealed soon. Stay tuned for updates!',
-    problem: 'Currently under development.',
-    solution: 'Check back later for the full story.',
-    result: 'Coming soon...',
-    tech: ['TBD'],
+    id: 'valentines-day',
+    title: 'Valentines Day — Interactive Year in Review',
+    tagline: 'A personalized interactive slideshow for your Valentine — photos, music, stats, a puzzle, and confetti.',
+    description: 'An interactive slideshow web app that creates a personalized Valentine\'s Day experience. Features a multi-slide journey through shared memories with background music, a drag-and-swap tile puzzle, bilingual support (English & Chinese), and canvas confetti on completion.',
+    problem: 'Wanted to create a meaningful, personalized digital gift that goes beyond a simple card — something interactive and memorable that celebrates a relationship\'s highlights.',
+    solution: 'Built a configurable React slideshow with per-slide photos and music, a tile puzzle mini-game, bilingual UI, and confetti effects. All content is driven by a single config file for easy personalization.',
+    result: 'A delightful, shareable web experience deployed on GitHub Pages that combines storytelling, interactivity, and celebration into one cohesive gift.',
+    tech: ['React', 'Vite', 'JavaScript', 'CSS'],
     image: '/placeholder.jpg',
+    github: 'https://github.com/Zimmyzhuang/zimmyzhuang.github.io',
+    live: 'https://zimmyzhuang.github.io/',
   },
   {
     id: 'project-2',
@@ -98,6 +100,9 @@ const TECH_COLORS: Record<string, string> = {
   'ClickHouse': 'bg-yellow-100 text-yellow-700',
   'Kafka': 'bg-stone-100 text-stone-700',
   'Kubernetes': 'bg-blue-100 text-blue-700',
+  'Vite': 'bg-violet-100 text-violet-700',
+  'JavaScript': 'bg-yellow-100 text-yellow-700',
+  'CSS': 'bg-pink-100 text-pink-700',
   'TBD': 'bg-canvas-300 text-ink-subtle dark:bg-void-surface dark:text-void-muted',
 }
 
