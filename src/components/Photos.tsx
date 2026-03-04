@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion'
+import { useState, useCallback } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 // ============================================================================
 // TYPES
@@ -203,7 +203,7 @@ function PhotoTile({
     <motion.div
       layout
       {...MOTION.photo}
-      transition={{ ...MOTION.photo.transition, delay: index * 0.05 }}
+      transition={{ ...MOTION.photo.transition, delay: index * 0.02 }}
       className="group relative cursor-pointer overflow-hidden rounded-lg border border-canvas-300 dark:border-void-border hover:border-neon-violet-dim/50 dark:hover:border-neon-violet/30 hover:shadow-lifted dark:hover:shadow-glow-violet transition-all duration-400"
       onClick={onOpen}
     >
@@ -348,16 +348,6 @@ function SectionHeader() {
 export default function Photos() {
   const [activeCategory, setActiveCategory] = useState<Category>('all')
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
-  const sectionRef = useRef<HTMLElement>(null)
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  })
-
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
-  const opacity = useTransform(smoothProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0])
-  const y = useTransform(smoothProgress, [0, 0.15, 0.85, 1], [60, 0, 0, -60])
 
   const filteredPhotos = activeCategory === 'all'
     ? PHOTOS
@@ -377,11 +367,9 @@ export default function Photos() {
   )
 
   return (
-    <motion.section
-      ref={sectionRef}
+    <section
       id="photos"
       className="section-spacing bg-canvas-50 dark:bg-void-elevated transition-colors duration-500 relative overflow-hidden"
-      style={{ opacity, y }}
     >
       <div className="section-container relative z-10">
         <SectionHeader />
@@ -427,6 +415,6 @@ export default function Photos() {
           />
         )}
       </AnimatePresence>
-    </motion.section>
+    </section>
   )
 }

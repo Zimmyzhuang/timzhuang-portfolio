@@ -3,13 +3,13 @@ import './globals.css'
 import { ThemeProvider } from '@/components/ThemeProvider'
 
 export const metadata: Metadata = {
-  title: "Tim Zhuang's Portfolio",
-  description: 'Personal portfolio showcasing software engineering projects and expertise.',
+  title: "Tim Zhuang",
+  description: 'Software engineer and photographer.',
   keywords: ['software engineer', 'developer', 'portfolio', 'projects', 'Tim Zhuang'],
   authors: [{ name: 'Tim Zhuang' }],
   openGraph: {
-    title: "Tim Zhuang's Portfolio",
-    description: 'Personal portfolio showcasing software engineering projects and expertise.',
+    title: "Tim Zhuang",
+    description: 'Software engineer and photographer.',
     type: 'website',
   },
 }

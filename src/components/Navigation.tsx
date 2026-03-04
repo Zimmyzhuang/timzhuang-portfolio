@@ -1,26 +1,28 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from './ThemeProvider'
+
+// ============================================================================
+// TYPES
+// ============================================================================
+
+export interface NavItem {
+  label: string
+  href: string
+}
+
+interface NavigationProps {
+  items: NavItem[]
+}
 
 // ============================================================================
 // CONSTANTS
 // ============================================================================
 
-/** Navigation links */
-const NAV_ITEMS = [
-  { label: 'Projects', href: '#projects' },
-  { label: 'Photos', href: '#photos' },
-  { label: 'About', href: '#about' },
-  { label: 'Resume', href: '#resume' },
-  { label: 'Contact', href: '#contact' },
-] as const
-
-/** Scroll threshold for sticky nav background */
 const SCROLL_THRESHOLD = 50
-
-/** Scroll offset for section detection */
 const SECTION_OFFSET = 200
 
 // ============================================================================
@@ -110,36 +112,42 @@ const STYLES = {
 // HOOKS
 // ============================================================================
 
-/** Track scroll position and active section */
-function useScrollTracking() {
+function useScrollTracking(items: NavItem[]) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState('')
 
   useEffect(() => {
+    const hashItems = items.filter(item => item.href.startsWith('#'))
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > SCROLL_THRESHOLD)
 
-      // Determine active section
-      const sections = NAV_ITEMS.map(item => item.href.slice(1))
+      if (hashItems.length === 0) {
+        setActiveSection('')
+        return
+      }
+
+      const sections = hashItems.map(item => item.href.slice(1))
       const scrollPosition = window.scrollY + SECTION_OFFSET
 
-      for (const section of sections.reverse()) {
+      let found = false
+      for (const section of [...sections].reverse()) {
         const element = document.getElementById(section)
         if (element && element.offsetTop <= scrollPosition) {
           setActiveSection(section)
+          found = true
           break
         }
       }
 
-      // Reset when at top
-      if (window.scrollY < SECTION_OFFSET) {
+      if (!found || window.scrollY < SECTION_OFFSET) {
         setActiveSection('')
       }
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [items])
 
   return { isScrolled, activeSection }
 }
@@ -148,17 +156,10 @@ function useScrollTracking() {
 // SUB-COMPONENTS
 // ============================================================================
 
-/** Logo/brand link - Chinese surname with graffiti style */
 function Logo() {
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
   return (
     <motion.a
-      href="#"
-      onClick={handleClick}
+      href="/"
       className="font-graffiti text-3xl md:text-4xl text-ink dark:text-void-text hover:text-neon-violet-dim dark:hover:text-neon-violet transition-colors duration-250 focus-ring rounded-sm"
       whileHover={{ scale: 1.05, rotate: -2 }}
       whileTap={{ scale: 0.95 }}
@@ -169,7 +170,6 @@ function Logo() {
   )
 }
 
-/** Active section indicator */
 function ActiveIndicator() {
   return (
     <motion.div
@@ -180,15 +180,14 @@ function ActiveIndicator() {
   )
 }
 
-/** Desktop nav link */
-function NavLink({ 
-  item, 
-  isActive, 
-  onClick 
-}: { 
-  item: typeof NAV_ITEMS[number]
+function NavLinkButton({
+  item,
+  isActive,
+  onClick,
+}: {
+  item: NavItem
   isActive: boolean
-  onClick: () => void 
+  onClick: () => void
 }) {
   return (
     <motion.button
@@ -196,6 +195,7 @@ function NavLink({
       className={STYLES.navLink}
       whileHover={{ y: -1 }}
       whileTap={{ y: 0 }}
+      aria-current={isActive ? 'page' : undefined}
     >
       {item.label}
       {isActive && <ActiveIndicator />}
@@ -203,14 +203,13 @@ function NavLink({
   )
 }
 
-/** Theme toggle button */
 function ThemeToggle({ size = 'default' }: { size?: 'default' | 'mobile' }) {
   const { theme, toggleTheme, mounted } = useTheme()
-  
+
   if (!mounted) return null
 
   const isLight = theme === 'light'
-  const icons = size === 'mobile' 
+  const icons = size === 'mobile'
     ? { light: Icons.moonLarge, dark: Icons.sunLarge }
     : { light: Icons.moon, dark: Icons.sun }
 
@@ -237,13 +236,12 @@ function ThemeToggle({ size = 'default' }: { size?: 'default' | 'mobile' }) {
   )
 }
 
-/** Hamburger menu button */
-function HamburgerButton({ 
-  isOpen, 
-  onClick 
-}: { 
+function HamburgerButton({
+  isOpen,
+  onClick,
+}: {
   isOpen: boolean
-  onClick: () => void 
+  onClick: () => void
 }) {
   return (
     <motion.button
@@ -273,13 +271,14 @@ function HamburgerButton({
   )
 }
 
-/** Mobile fullscreen menu */
-function MobileMenu({ 
-  isOpen, 
-  onNavigate 
-}: { 
+function MobileMenu({
+  isOpen,
+  items,
+  onNavigate,
+}: {
   isOpen: boolean
-  onNavigate: (href: string) => void 
+  items: NavItem[]
+  onNavigate: (href: string) => void
 }) {
   const { theme, toggleTheme, mounted } = useTheme()
 
@@ -291,7 +290,7 @@ function MobileMenu({
           className="fixed inset-0 z-40 bg-canvas-100 dark:bg-void-base backdrop-blur-sm md:hidden"
         >
           <div className="flex flex-col items-center justify-center h-full gap-8">
-            {NAV_ITEMS.map((item, index) => (
+            {items.map((item, index) => (
               <motion.button
                 key={item.href}
                 initial={{ opacity: 0, y: 20 }}
@@ -304,14 +303,13 @@ function MobileMenu({
                 {item.label}
               </motion.button>
             ))}
-            
-            {/* Mobile theme toggle */}
+
             {mounted && (
               <motion.button
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                transition={{ delay: 0.4, duration: 0.3 }}
+                transition={{ delay: items.length * 0.1, duration: 0.3 }}
                 onClick={toggleTheme}
                 className="flex items-center gap-3 font-body text-body-md text-ink-muted dark:text-void-muted hover:text-ink dark:hover:text-void-text transition-colors focus-ring rounded-sm"
               >
@@ -333,21 +331,34 @@ function MobileMenu({
 // MAIN COMPONENT
 // ============================================================================
 
-export default function Navigation() {
+export default function Navigation({ items }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { isScrolled, activeSection } = useScrollTracking()
+  const { isScrolled, activeSection } = useScrollTracking(items)
+  const pathname = usePathname()
+  const router = useRouter()
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-    }
+  const navigate = (href: string) => {
     setIsMenuOpen(false)
+
+    if (href.startsWith('#')) {
+      const element = document.querySelector(href)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    } else {
+      router.push(href)
+    }
   }
 
-  // Dynamic nav background classes
-  const navBgClass = isScrolled 
-    ? 'bg-canvas-100/90 dark:bg-void-elevated/95 backdrop-blur-md border-b border-canvas-300/50 dark:border-void-border' 
+  const isItemActive = (item: NavItem) => {
+    if (item.href.startsWith('#')) {
+      return activeSection === item.href.slice(1)
+    }
+    return pathname === item.href
+  }
+
+  const navBgClass = isScrolled
+    ? 'bg-canvas-100/90 dark:bg-void-elevated/95 backdrop-blur-md border-b border-canvas-300/50 dark:border-void-border'
     : 'bg-transparent'
 
   return (
@@ -360,20 +371,18 @@ export default function Navigation() {
           <div className="flex items-center justify-between h-16 md:h-20">
             <Logo />
 
-            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
-              {NAV_ITEMS.map((item) => (
-                <NavLink
+              {items.map((item) => (
+                <NavLinkButton
                   key={item.href}
                   item={item}
-                  isActive={activeSection === item.href.slice(1)}
-                  onClick={() => scrollToSection(item.href)}
+                  isActive={isItemActive(item)}
+                  onClick={() => navigate(item.href)}
                 />
               ))}
               <ThemeToggle />
             </div>
 
-            {/* Mobile Controls */}
             <HamburgerButton
               isOpen={isMenuOpen}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -382,7 +391,7 @@ export default function Navigation() {
         </div>
       </motion.nav>
 
-      <MobileMenu isOpen={isMenuOpen} onNavigate={scrollToSection} />
+      <MobileMenu isOpen={isMenuOpen} items={items} onNavigate={navigate} />
     </>
   )
 }

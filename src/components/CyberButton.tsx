@@ -284,18 +284,10 @@ export default function CyberButton({
         {/* Signal bars - micro information */}
         <div className="absolute top-1 right-2 flex gap-0.5">
           {[0, 1, 2].map((i) => (
-            <motion.div
+            <div
               key={i}
-              className="w-0.5 bg-current opacity-30"
-              style={{ height: `${(i + 1) * 3}px` }}
-              animate={{
-                opacity: isHovered ? [0.3, 0.8, 0.3] : 0.2,
-              }}
-              transition={{
-                duration: 1,
-                delay: i * 0.1,
-                repeat: isHovered ? Infinity : 0,
-              }}
+              className="w-0.5 bg-current"
+              style={{ height: `${(i + 1) * 3}px`, opacity: isHovered ? 0.6 : 0.2 }}
             />
           ))}
         </div>

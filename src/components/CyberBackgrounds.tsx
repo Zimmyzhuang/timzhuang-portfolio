@@ -192,60 +192,17 @@ function HoloPanels({ intensity = 0.5 }: { intensity?: number }) {
           {/* Data bars */}
           <div className="absolute bottom-2 left-2 right-2 flex gap-1">
             {[...Array(5)].map((_, j) => (
-              <motion.div
+              <div
                 key={j}
                 className="h-1 flex-1 rounded-full"
-                style={{ background: NEON.cyan + '0.4)' }}
-                animate={{ opacity: [0.3, 0.8, 0.3] }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  delay: j * 0.2,
-                }}
+                style={{ background: NEON.cyan + '0.4)', opacity: 0.3 + (j * 0.1) }}
               />
             ))}
           </div>
-
-          {/* Scan line */}
-          <motion.div
-            className="absolute left-0 right-0 h-px"
-            style={{ background: NEON.cyan + '0.6)' }}
-            animate={{ top: ['0%', '100%'] }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              delay: panel.delay,
-              ease: 'linear',
-            }}
-          />
         </motion.div>
       ))}
 
-      {/* Floating hex elements */}
-      {[...Array(6)].map((_, i) => (
-        <motion.div
-          key={`hex-${i}`}
-          className="absolute w-8 h-8"
-          style={{
-            left: `${15 + i * 15}%`,
-            top: `${30 + (i % 3) * 25}%`,
-          }}
-          animate={{
-            y: [0, -20, 0],
-            opacity: [0.2, 0.5, 0.2],
-            rotate: [0, 60, 0],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            delay: i * 0.8,
-          }}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke={`rgba(110, 58, 255, ${intensity * 0.5})`} strokeWidth="1">
-            <polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5" />
-          </svg>
-        </motion.div>
-      ))}
+      
     </div>
   )
 }
@@ -391,20 +348,20 @@ function seededRandom(seed: number): number {
 }
 
 /** Pre-computed column data to avoid hydration mismatch */
-const DATA_STREAM_COLUMNS = [...Array(30)].map((_, i) => ({
-  speed: 1.5 + seededRandom(i * 7) * 2.5, // Faster: 1.5-4s instead of 3-7s
+const DATA_STREAM_COLUMNS = [...Array(12)].map((_, i) => ({
+  speed: 2 + seededRandom(i * 7) * 3,
   delay: seededRandom(i * 13) * 3,
-  brightness: 0.5 + seededRandom(i * 17) * 0.5, // Brighter: 0.5-1.0 instead of 0.3-0.8
-  blur: seededRandom(i * 23) > 0.85, // Less blur
-  glyphs: [...Array(12)].map((_, j) => { // Fewer glyphs (12 instead of 20)
-    const glyphSet = '01アイウエオカキクケコサシスセソタチツテト∆∇◊□○●◐◑∞≈≠±×÷'
+  brightness: 0.5 + seededRandom(i * 17) * 0.5,
+  blur: seededRandom(i * 23) > 0.85,
+  glyphs: [...Array(6)].map((_, j) => {
+    const glyphSet = '01アイウエオカキクケコ∆∇◊□○●∞≈'
     const index = Math.floor(seededRandom(i * 100 + j * 7) * glyphSet.length)
     return glyphSet[index]
   }),
 }))
 
 function DataStream({ intensity = 0.5 }: { intensity?: number }) {
-  const columns = 30
+  const columns = 12
   
   return (
     <div className="absolute inset-0 overflow-hidden font-mono text-sm">
@@ -414,7 +371,6 @@ function DataStream({ intensity = 0.5 }: { intensity?: number }) {
           className="absolute top-0 flex flex-col items-center gap-0.5"
           style={{
             left: `${(i / columns) * 100}%`,
-            filter: col.blur ? 'blur(0.5px)' : 'none',
             opacity: intensity * col.brightness,
           }}
           animate={{
@@ -430,13 +386,10 @@ function DataStream({ intensity = 0.5 }: { intensity?: number }) {
           {col.glyphs.map((glyph, j) => (
             <span
               key={j}
-              className="dark:drop-shadow-[0_0_8px_rgba(110,58,255,0.8)]"
               style={{
                 color: j === 0 
                   ? 'rgba(110, 58, 255, 1)' 
-                  : j < 2 
-                    ? NEON.violet + '0.9)' 
-                    : NEON.violet + Math.max(0.1, 0.7 - j * 0.08) + ')',
+                  : NEON.violet + Math.max(0.1, 0.7 - j * 0.1) + ')',
                 fontWeight: j < 2 ? 600 : 400,
               }}
             >
@@ -795,10 +748,10 @@ function HexGrid({ intensity = 0.5 }: { intensity?: number }) {
         <rect width="100%" height="100%" fill="url(#hexPattern)" />
       </svg>
 
-      {/* Active hex nodes - more visible */}
-      {[...Array(12)].map((_, i) => {
-        const x = 8 + (i % 4) * 28
-        const y = 12 + Math.floor(i / 4) * 30
+      {/* Active hex nodes */}
+      {[...Array(6)].map((_, i) => {
+        const x = 12 + (i % 3) * 35
+        const y = 20 + Math.floor(i / 3) * 40
         
         return (
           <motion.div
@@ -810,38 +763,22 @@ function HexGrid({ intensity = 0.5 }: { intensity?: number }) {
               transform: 'translate(-50%, -50%)',
             }}
           >
-            <motion.svg width="100" height="115" viewBox="0 0 60 69.2">
-              <defs>
-                <filter id={`activeGlow-${i}`} x="-100%" y="-100%" width="300%" height="300%">
-                  <feGaussianBlur stdDeviation="4" result="blur"/>
-                  <feMerge>
-                    <feMergeNode in="blur"/>
-                    <feMergeNode in="blur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-              </defs>
+            <svg width="80" height="92" viewBox="0 0 60 69.2">
               <motion.polygon
                 points="30,0 60,17.3 60,51.9 30,69.2 0,51.9 0,17.3"
                 fill={NEON.violet + '0.08)'}
-                stroke={NEON.cyan + '0.5)'}
+                stroke={NEON.cyan + '0.4)'}
                 strokeWidth="1.5"
-                filter={`url(#activeGlow-${i})`}
                 animate={{
-                  fill: [
-                    NEON.violet + '0.05)',
-                    NEON.violet + '0.15)',
-                    NEON.violet + '0.05)',
-                  ],
                   strokeOpacity: [0.3, 0.6, 0.3],
                 }}
                 transition={{
                   duration: 3,
                   repeat: Infinity,
-                  delay: i * 0.3,
+                  delay: i * 0.5,
                 }}
               />
-            </motion.svg>
+            </svg>
           </motion.div>
         )
       })}
@@ -885,7 +822,7 @@ function HexGrid({ intensity = 0.5 }: { intensity?: number }) {
 // ============================================================================
 
 /** Pre-computed star positions */
-const STARS = [...Array(100)].map((_, i) => ({
+const STARS = [...Array(30)].map((_, i) => ({
   x: seededRandom(i * 7) * 100,
   y: seededRandom(i * 11) * 100,
   size: seededRandom(i * 13) * 2 + 1,

@@ -1,7 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 // ============================================================================
 // CONSTANTS
@@ -24,9 +23,9 @@ const BIO_PARAGRAPHS = [
 /** Animation stagger delays for entrance animations */
 const STAGGER_DELAYS = {
   label: 0,
-  heading: 0.1,
-  bio: [0.2, 0.3, 0.4],
-  skills: 0.1, // per skill group
+  heading: 0.05,
+  bio: [0.1, 0.15, 0.2],
+  skills: 0.05, // per skill group
 } as const
 
 // ============================================================================
@@ -187,26 +186,10 @@ function BioContent() {
 // ============================================================================
 
 export default function About() {
-  const sectionRef = useRef<HTMLElement>(null)
-  
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  })
-  
-  // Smooth the scroll progress for fluid animation
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
-  
-  // Fade in as section enters, fade out as it leaves
-  const opacity = useTransform(smoothProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0])
-  const y = useTransform(smoothProgress, [0, 0.15, 0.85, 1], [60, 0, 0, -60])
-
   return (
-    <motion.section 
-      ref={sectionRef}
+    <section 
       id="about" 
       className="section-spacing bg-canvas-50 dark:bg-void-elevated transition-colors duration-500 relative overflow-hidden"
-      style={{ opacity, y }}
     >
       
       <div className="section-container relative z-10">
@@ -251,6 +234,6 @@ export default function About() {
         {/* ===== BOTTOM: Technical Skills - Full Width ===== */}
         <SkillsSection />
       </div>
-    </motion.section>
+    </section>
   )
 }

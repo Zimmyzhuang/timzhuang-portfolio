@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import CyberButton from './CyberButton'
 import CyberBackgrounds from './CyberBackgrounds'
 
@@ -214,16 +214,10 @@ function SignalBars({ isActive }: { isActive: boolean }) {
   return (
     <div className="absolute top-1/2 -translate-y-1/2 right-4 flex gap-0.5">
       {[0, 1, 2].map((i) => (
-        <motion.div
+        <div
           key={i}
           className="w-0.5 bg-white/40"
-          style={{ height: `${(i + 1) * 3}px` }}
-          animate={{ opacity: isActive ? [0.3, 1, 0.3] : 0.4 }}
-          transition={{
-            duration: 0.5,
-            delay: i * 0.1,
-            repeat: isActive ? Infinity : 0,
-          }}
+          style={{ height: `${(i + 1) * 3}px`, opacity: isActive ? 0.8 : 0.4 }}
         />
       ))}
     </div>
@@ -294,12 +288,9 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
                 className="flex items-center gap-3"
               >
                 <span>Send Message</span>
-                <motion.div
-                  animate={{ x: [0, 3, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-                >
+                <div>
                   {Icons.send}
-                </motion.div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -558,29 +549,13 @@ function ContactForm() {
 // ============================================================================
 
 export default function Contact() {
-  const sectionRef = useRef<HTMLElement>(null)
-  
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  })
-  
-  // Smooth the scroll progress for fluid animation
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
-  
-  // Fade in as section enters, fade out as it leaves
-  const opacity = useTransform(smoothProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0])
-  const y = useTransform(smoothProgress, [0, 0.15, 0.85, 1], [60, 0, 0, -60])
-
   return (
     <>
       <ResumeSection />
       
-      <motion.section 
-        ref={sectionRef}
+      <section 
         id="contact" 
         className="section-spacing bg-canvas-50 dark:bg-void-elevated transition-colors duration-500 relative overflow-hidden"
-        style={{ opacity, y }}
       >
         {/* Cyberpunk data stream background */}
         <CyberBackgrounds variant="data-stream" intensity={0.4} />
@@ -591,7 +566,7 @@ export default function Contact() {
             <ContactForm />
           </div>
         </div>
-      </motion.section>
+      </section>
     </>
   )
 }

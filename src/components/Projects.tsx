@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import CyberButton from './CyberButton'
 import CyberBackgrounds from './CyberBackgrounds'
 
@@ -236,7 +236,7 @@ function ProjectCard({
   return (
     <motion.article
       {...MOTION.card}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.4, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
       className="group relative h-full"
     >
       <motion.button
@@ -409,26 +409,11 @@ function SectionHeader() {
 
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const sectionRef = useRef<HTMLElement>(null)
-  
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  })
-  
-  // Smooth the scroll progress for fluid animation
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
-  
-  // Fade in as section enters, fade out as it leaves
-  const opacity = useTransform(smoothProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0])
-  const y = useTransform(smoothProgress, [0, 0.15, 0.85, 1], [60, 0, 0, -60])
 
   return (
-    <motion.section 
-      ref={sectionRef}
+    <section 
       id="projects" 
       className="section-spacing bg-canvas-100 dark:bg-void-base transition-colors duration-500 relative overflow-hidden"
-      style={{ opacity, y }}
     >
       {/* Cyberpunk hex grid background */}
       <CyberBackgrounds variant="hex-grid" intensity={0.6} />
@@ -458,6 +443,6 @@ export default function Projects() {
           />
         )}
       </AnimatePresence>
-    </motion.section>
+    </section>
   )
 }

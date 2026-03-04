@@ -27,12 +27,12 @@ const SPRING_CONFIG = {
 
 /** Animation timing for staggered entrance */
 const ENTRANCE_DELAYS = {
-  status: 0.1,
-  role: 0.2,
-  name: 0.3,
-  tagline: 0.5,
-  cta: 0.7,
-  timestamp: 1,
+  status: 0,
+  role: 0.05,
+  name: 0.1,
+  tagline: 0.2,
+  cta: 0.3,
+  timestamp: 0.4,
 } as const
 
 // ============================================================================
